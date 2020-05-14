@@ -1,16 +1,15 @@
 import pytest
 
 from util.Calc import Calc
-
+import yaml
+def getdata(datapath,datakey):
+    testdata = yaml.safe_load(open(datapath))
+    return testdata[datakey]
 
 class Test_calc:
     def setup(self):
         self.calc = Calc()
-
-    @pytest.mark.second
-    @pytest.mark.parametrize("a,b,c",
-                             [(1, 2, 3), (2, 3, 5), (None, None, None), (-1, 0, -1), (0.1, 0.1, 0.2), (0, 0, 0),
-                              (9223372036854775807, 1, 9223372036854775808)])
+    @pytest.mark.parametrize("a,b,c",getdata('../data/data.yaml','add'))
     def calc_add(self, a, b, c):
         try:
             rest = self.calc.add(a, b)
@@ -19,9 +18,7 @@ class Test_calc:
         else:
             assert c == rest
 
-    @pytest.mark.first
-    @pytest.mark.parametrize("a,b,c",
-                             [(8, 4, 2), (-1, 1, -1), (1, -1, -1), (0.1, 0.5, 0.2), (1, 0, 1), (None, None, None)])
+    @pytest.mark.parametrize("a,b,c",getdata('../data/data.yaml','div'))
     def calc_div(self, a, b, c):
         try:
             rest = self.calc.div(a, b)
@@ -32,14 +29,12 @@ class Test_calc:
         else:
             assert c == rest
 
-    @pytest.mark.parametrize("a,b,c",
-                             [(8, 4, 4), (-1, 1, -2), (1, -1, 2), (0.1, 0.5, -0.4), (1, 0, 1)])
+    @pytest.mark.parametrize("a,b,c",getdata('../data/data.yaml','sub'))
     def calc_sub(self, a, b, c):
         rest = self.calc.sub(a, b)
         assert c == rest
 
-    @pytest.mark.parametrize("a,b,c",
-                             [(8, 4, 32), (-1, 1, -1), (1, -1, -1), (0.1, 0.5, 0.05), (1, 0, 0)])
+    @pytest.mark.parametrize("a,b,c",getdata('../data/data.yaml','mul'))
     def calc_mul(self, a, b, c):
         rest = self.calc.mul(a, b)
         assert c == rest
